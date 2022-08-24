@@ -1,0 +1,93 @@
+<!-- control the form for registering via at the particular field via ngModel, and for submitting go to app component ts file and add a method and its not a best place to give at the button because it will use the default html behaviour and good place is to give (ngSubmit) at the form start tag because as soon as the default behaviour of html form is triggered it will work-->
+<!-- the button will trigger the javascript emit event on clicking it -->
+<!-- ngform tells angular that give me access to this form you created automatically -->
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+        <div id="user-data" ngModelGroup="userData" #userData="ngModelGroup">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              name="username"
+              ngModel
+              required
+            />
+          </div>
+          <!-- this approach ahs downside it will override the content if we click again -->
+          <button class="btn btn-default" type="button" (click)="suggestUserName()">
+            Suggest an Username
+          </button>
+          <div class="form-group">
+            <label for="email">Mail</label>
+            <!-- here email in input at end is not a html attribute its still a directive by angular  -->
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              name="email"
+              ngModel
+              required
+              email
+              #email="ngModel"
+            />
+            <span class="help-block">Please enter a valid email!</span>
+          </div>
+          <p *ngIf="!email.valid && email.touched">
+            please enter a valid value!
+          </p>
+        </div>
+        <p *ngIf="!userData.valid && userData.touched"></p>
+        <div class="form-group">
+          <label for="secret">Secret Questions</label>
+          <select
+            id="secret"
+            class="form-control"
+            [ngModel]="defaultQuestion"
+            name="secret"
+          >
+            <option value="pet">Your first Pet?</option>
+            <option value="teacher">Your first teacher?</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <textarea
+            name="questionAnswer"
+            rows="3"
+            class="form-control"
+            [(ngModel)]="answer"
+          ></textarea>
+        </div>
+        <p>Your reply: {{ answer }}</p>
+        <div class="radio" *ngFor="let gender of genders">
+          <label for="">
+            <input type="radio" name="gender" ngModel [value]="gender" required> {{ gender }}
+          </label>
+        </div>
+        <button
+          [disabled]="!userForm.valid"
+          class="btn btn-primary"
+          type="submit"
+        >
+          Submit
+        </button>
+      </form>
+      
+      
+    </div>
+  </div>
+  <hr>
+  <div class="row" *ngIf="submitted">
+    <div class="col-xs-12">
+      <h3>Your Data</h3>
+      <p>Username: {{ user.username }}</p>
+      <p>Mail: {{ user.email }}</p>
+      <p>Secret Question: Your first {{ user.secretQuestion }}</p>
+      <p>Answer: {{ user.answer }}</p>
+      <p>Gender: {{ user.gender }}</p>
+    </div>
+  </div>
+</div>
